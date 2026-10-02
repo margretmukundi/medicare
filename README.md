@@ -1,19 +1,21 @@
-# React + Vite
+# MediCare
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+MediCare is a static React storefront. Catalog, category, promotion, FAQ, and site content are hardcoded in `src/data/store.js`; the language toggle supports English and Swahili.
 
-Currently, two official plugins are available:
+This version has no Supabase connection, admin panel, accounts, order processing, prescription uploads, or online payments. Product and contact information changes are made in source before deployment. The contact form opens the visitor's email app only when a pharmacy email is configured in `src/data/store.js`.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Local development
 
-## React Compiler
+```sh
+npm ci
+npm run dev
+```
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## Render static-site deployment
 
-Note: This will impact Vite dev & build performances.
-You can also try [the experimental native React Compiler support in plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md#rust-react-compiler) by using `compiler: true` in the plugin options instead of using the Babel plugin.
+- Build command: `npm ci && npm run build`
+- Publish directory: `dist`
+- Environment variables: none required
+- Rewrite rule: `/*` to `/index.html` with status `200`
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+To change catalog content, edit `src/data/store.js`, then run `npm run build`.

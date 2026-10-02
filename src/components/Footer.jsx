@@ -28,7 +28,7 @@ export default function Footer() {
               <div style={{ width: 32, height: 32, borderRadius: 10, background: 'linear-gradient(135deg,#9FD96A,#4A8C2A)', display: 'grid', placeItems: 'center' }}><Icon name="solar:health-bold" size={18} style={{ color: '#fff' }} /></div>
               <span style={{ fontFamily: 'Sora,sans-serif', fontSize: '1.25rem', fontWeight: 800, letterSpacing: '-.06em' }}>{s.brand_name}</span>
             </div>
-            <p style={{ margin: 0, color: 'rgba(17,26,12,.62)', fontSize: '.9rem' }}>{tr(s.tagline)} {tr('Order medicines and health essentials online, with pharmacist-checked prescriptions and secure M-Pesa payment.')}</p>
+            <p style={{ margin: 0, color: 'rgba(17,26,12,.62)', fontSize: '.9rem' }}>{tr(s.tagline)} {tr('Browse medicines and health essentials, and check product information before use.')}</p>
             {s.ppb_license && <p style={{ margin: '1rem 0 0', fontSize: '.78rem', color: 'rgba(17,26,12,.55)', display: 'flex', gap: '.4rem', alignItems: 'center' }}><Icon name="solar:shield-check-linear" size={14} style={{ color: '#4A8C2A' }} />{tr('Pharmacy & Poisons Board licence:')} {s.ppb_license}</p>}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))', gap: '1.5rem' }}>
@@ -38,16 +38,9 @@ export default function Footer() {
             </div>
             <div>
               <span style={head}>{tr('Help')}</span>
-              <Link to="/track" className={link}>{tr('Track an order')}</Link>
               <Link to="/contact" className={link}>{tr('FAQ')}</Link>
               <Link to="/contact" className={link}>{tr('Ask a pharmacist')}</Link>
               <Link to="/about" className={link}>{tr('About us')}</Link>
-              <Link to="/login" className={link}>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem' }}>
-                  <Icon name="solar:user-linear" size={14} style={{ color: '#4A8C2A' }} />
-                  {tr('My account')}
-                </span>
-              </Link>
             </div>
             {contact.length > 0 && (
               <div>

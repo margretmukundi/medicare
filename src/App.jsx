@@ -1,7 +1,5 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link, Outlet, useLocation } from 'react-router-dom';
-import { CartProvider } from './context/CartContext';
-import { AuthProvider } from './context/AuthContext';
 import { SettingsProvider } from './context/SettingsContext';
 import { LanguageProvider } from './context/LanguageContext';
 import { useLanguage } from './context/LanguageContext';
@@ -10,19 +8,8 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Shop from './pages/Shop';
 import ProductDetail from './pages/ProductDetail';
-import Cart from './pages/Cart';
-import Checkout from './pages/Checkout';
 import About from './pages/About';
 import Contact from './pages/Contact';
-import Track from './pages/Track';
-import Login from './pages/Login';
-import ResetPassword from './pages/ResetPassword';
-import Account from './pages/Account';
-import AdminLayout from './admin/AdminLayout';
-import Dashboard from './admin/Dashboard';
-import Orders from './admin/Orders';
-import Settings from './admin/Settings';
-import { ProductsPage, CategoriesPage, PromotionsPage, ServicesPage, FaqsPage, TeamPage, CustomersPage, MessagesPage } from './admin/pages';
 import './index.css';
 
 function ScrollToTop() {
@@ -56,42 +43,19 @@ export default function App() {
   return (
     <LanguageProvider>
       <SettingsProvider>
-        <AuthProvider>
-          <CartProvider>
-            <BrowserRouter>
-              <ScrollToTop />
-              <Routes>
+        <BrowserRouter>
+          <ScrollToTop />
+          <Routes>
               <Route element={<StoreLayout />}>
                 <Route path="/" element={<Home />} />
                 <Route path="/shop" element={<Shop />} />
                 <Route path="/product/:id" element={<ProductDetail />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/checkout" element={<Checkout />} />
-                <Route path="/track" element={<Track />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/reset-password" element={<ResetPassword />} />
-                <Route path="/account" element={<Account />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<Dashboard />} />
-                <Route path="orders" element={<Orders />} />
-                <Route path="customers" element={<CustomersPage />} />
-                <Route path="messages" element={<MessagesPage />} />
-                <Route path="products" element={<ProductsPage />} />
-                <Route path="categories" element={<CategoriesPage />} />
-                <Route path="promotions" element={<PromotionsPage />} />
-                <Route path="services" element={<ServicesPage />} />
-                <Route path="faqs" element={<FaqsPage />} />
-                <Route path="team" element={<TeamPage />} />
-                <Route path="settings" element={<Settings />} />
-              </Route>
-              </Routes>
-            </BrowserRouter>
-          </CartProvider>
-        </AuthProvider>
+          </Routes>
+        </BrowserRouter>
       </SettingsProvider>
     </LanguageProvider>
   );

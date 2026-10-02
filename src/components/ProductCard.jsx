@@ -1,15 +1,11 @@
 import { Link } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
 import { kes, discountPct } from '../lib/format';
 import { useLanguage } from '../context/LanguageContext';
 import { Icon } from './ui/Bits';
 
 export default function ProductCard({ product }) {
-  const { dispatch } = useCart();
   const { tr } = useLanguage();
   const pct = discountPct(product);
-  const inStock = product.stock_qty > 0;
-  const low = inStock && product.stock_qty <= 10;
   const sub = [product.strength, product.dosage_form, product.pack_size].filter(Boolean).map(tr).join(' · ');
 
   return (
@@ -22,7 +18,6 @@ export default function ProductCard({ product }) {
         <div style={{ position: 'absolute', top: 10, left: 10, right: 10, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
           {product.requires_prescription && <span className="pill pill-rx"><Icon name="solar:document-medicine-linear" size={12} />{tr('Rx only')}</span>}
           {product.badge && <span className="pill" style={{ background: product.badge === 'Sale' ? 'rgba(239,68,68,.92)' : 'linear-gradient(135deg,#9FD96A,#4A8C2A)', color: product.badge === 'Sale' ? '#fff' : '#111A0C' }}>{tr(product.badge)}</span>}
-          {!inStock && <span className="pill" style={{ background: 'rgba(30,42,21,.88)', color: 'rgba(244,250,240,.7)', border: '1px solid rgba(244,250,240,.14)' }}>{tr('Out of stock')}</span>}
         </div>
       </Link>
 
@@ -40,13 +35,11 @@ export default function ProductCard({ product }) {
             <span className="pill pill-green" style={{ padding: '.15rem .45rem' }}>-{pct}%</span>
           </>}
         </div>
-        <div style={{ minHeight: 18, marginBottom: '.7rem', fontSize: '.7rem', color: '#FBBF24' }}>{low && `${tr('Only')} ${product.stock_qty} ${tr('left in stock')}`}</div>
+        <div style={{ minHeight: 18, marginBottom: '.7rem' }}></div>
 
-        <button disabled={!inStock} onClick={() => dispatch({ type: 'ADD', product })}
-          className={inStock ? 'btn-primary' : ''}
-          style={inStock ? { width: '100%', padding: '.7rem' } : { width: '100%', padding: '.7rem', borderRadius: 999, border: 'none', background: 'rgba(244,250,240,.06)', color: 'rgba(244,250,240,.3)', fontSize: '.74rem', fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', cursor: 'not-allowed' }}>
-          <Icon name="solar:cart-plus-linear" size={15} />{tr(inStock ? 'Add to cart' : 'Out of stock')}
-        </button>
+        <Link to={`/product/${product.id}`} className="btn-primary" style={{ width: '100%', padding: '.7rem', justifyContent: 'center' }}>
+          {tr('View details')} <Icon name="solar:arrow-right-linear" size={15} />
+        </Link>
       </div>
     </div>
   );

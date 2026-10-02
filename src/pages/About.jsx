@@ -42,7 +42,7 @@ export default function About() {
               </div>
             </div>
             <div className="card-light" style={{ padding: '2rem', borderRadius: 30 }}>
-              <div className="label" style={{ color: 'rgba(17,26,12,.5)' }}>{tr('How prescription orders work')}</div>
+              <div className="label" style={{ color: 'rgba(17,26,12,.5)' }}>{tr('How to browse this catalog')}</div>
               {steps.map((st, i) => (
                 <div key={st.title} style={{ display: 'flex', gap: '1rem', padding: '1rem 0', borderBottom: i < steps.length - 1 ? '1px solid rgba(17,26,12,.08)' : 0 }}>
                   <div style={{ width: 42, height: 42, flexShrink: 0, borderRadius: 13, display: 'grid', placeItems: 'center', background: 'rgba(74,140,42,.12)', color: '#2F6A17' }}><Icon name={st.icon} size={21} /></div>
@@ -92,8 +92,8 @@ export default function About() {
 
       <section className="section-dark" style={{ padding: '5rem 0', textAlign: 'center' }}>
         <div className="container-x" style={{ maxWidth: 640 }}>
-          <h2 className="h-display">{tr('Ready to order?')}</h2>
-          <p style={{ color: 'rgba(244,250,240,.64)', margin: '1rem 0 1.8rem' }}>{tr('Browse the shop, or send our pharmacist a question first.')}</p>
+          <h2 className="h-display">{tr('Looking for a product?')}</h2>
+          <p style={{ color: 'rgba(244,250,240,.64)', margin: '1rem 0 1.8rem' }}>{tr('Browse the catalog, or contact the pharmacy about a product.')}</p>
           <div style={{ display: 'flex', gap: '.8rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link to="/shop" className="btn-primary">{tr('Shop now')}</Link><Link to="/contact" className="btn-ghost">{tr('Ask a pharmacist')}</Link>
           </div>

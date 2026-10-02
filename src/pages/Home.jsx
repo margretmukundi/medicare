@@ -4,17 +4,16 @@ import { useAsync } from '../hooks/useAsync';
 import { getCategories, getProducts, getPromotions, getServices, getFaqs } from '../lib/api';
 import { useSettings } from '../context/SettingsContext';
 import { useLanguage } from '../context/LanguageContext';
-import { kes } from '../lib/format';
 import { Icon, SectionHeader, Skeleton, ErrorNote } from '../components/ui/Bits';
 import ProductCard from '../components/ProductCard';
 import CategoryCard from '../components/CategoryCard';
 import PromoCard from '../components/PromoCard';
 
 export const steps = [
-  { icon: 'solar:cart-plus-linear', title: 'Add your medicine', desc: 'Find it in the shop and add it to your cart. Prescription-only items carry an Rx tag.' },
-  { icon: 'solar:upload-minimalistic-linear', title: 'Upload your prescription', desc: 'At checkout, attach a clear photo or PDF of the prescription for any Rx item.' },
-  { icon: 'solar:user-check-rounded-linear', title: 'Pharmacist reviews', desc: 'Our pharmacist verifies the prescription before anything is dispatched.' },
-  { icon: 'solar:delivery-linear', title: 'Pay & get it delivered', desc: 'Approve the M-Pesa prompt on your phone and track your order to your door.' },
+  { icon: 'solar:magnifer-linear', title: 'Browse the catalog', desc: 'Explore products by category or search by name and active ingredient.' },
+  { icon: 'solar:document-text-linear', title: 'Check product details', desc: 'Review ingredients, strengths, pack sizes, and prescription information.' },
+  { icon: 'solar:user-check-rounded-linear', title: 'Ask a pharmacist', desc: 'Consult a qualified pharmacist or doctor about medicines and safe use.' },
+  { icon: 'solar:chat-round-dots-linear', title: 'Contact the pharmacy', desc: 'Use the contact information published on this site to ask about availability.' },
 ];
 
 function Hero() {
@@ -25,9 +24,9 @@ function Hero() {
   const { data: heroPromos } = useAsync(() => getPromotions('hero'), []);
   const featured = heroPromos?.[0];
   const trust = [
-    { icon: 'solar:shield-check-linear', label: tr('Pharmacist-verified Rx') },
-    { icon: 'solar:smartphone-2-linear', label: tr('Pay with M-Pesa') },
-    { icon: 'solar:delivery-linear', label: s.delivery_eta ? tr(`Delivery in ${s.delivery_eta}`) : tr('Home delivery') },
+    { icon: 'solar:widget-4-linear', label: tr('Browse the catalog') },
+    { icon: 'solar:document-text-linear', label: tr('Detailed product information') },
+    { icon: 'solar:user-check-rounded-linear', label: tr('Ask a pharmacist') },
   ];
   return (
     <section className="section-dark" style={{ clipPath: 'polygon(0 0,100% 0,100% calc(100% - 4vw),0 100%)', paddingBottom: '9vw', marginBottom: '-4vw' }}>
@@ -62,13 +61,13 @@ function Hero() {
               </>
             ) : (
               <>
-                <span className="pill pill-green" style={{ marginBottom: '1rem' }}>{tr('Free delivery')}</span>
-                <h2 style={{ margin: 0, fontSize: '1.7rem', letterSpacing: '-.05em' }}>{s.free_delivery_threshold ? `${tr('On orders over')} ${kes(s.free_delivery_threshold)}` : tr('Shop our full range')}</h2>
+                <span className="pill pill-green" style={{ marginBottom: '1rem' }}>{tr('Browse the catalog')}</span>
+                <h2 style={{ margin: 0, fontSize: '1.7rem', letterSpacing: '-.05em' }}>{tr('Find everyday health essentials')}</h2>
                 <Link to="/shop" className="btn-primary" style={{ marginTop: '1.4rem' }}>{tr('Shop now')}</Link>
               </>
             )}
             <div style={{ display: 'grid', gap: '.8rem', marginTop: '1.6rem', paddingTop: '1.4rem', borderTop: '1px solid rgba(244,250,240,.1)' }}>
-              {['Prescription uploads reviewed by a pharmacist', 'Prices & stock always match checkout', 'No card details — M-Pesa only'].map(item => (
+              {['Browse categories and product information', 'Check product availability with the pharmacy', 'Ask a qualified pharmacist about medicines'].map(item => (
                 <div key={item} style={{ display: 'flex', gap: '.6rem', fontSize: '.84rem', color: 'rgba(244,250,240,.74)' }}>
                   <Icon name="solar:check-circle-linear" size={17} style={{ color: '#6DB33F', flexShrink: 0 }} />{tr(item)}
                 </div>
@@ -82,7 +81,6 @@ function Hero() {
 }
 
 export default function Home() {
-  const s = useSettings();
   const { tr } = useLanguage();
   const cats = useAsync(getCategories, []);
   const prods = useAsync(getProducts, []);
@@ -92,7 +90,7 @@ export default function Home() {
 
   const counts = {};
   (prods.data || []).forEach(p => { counts[p.category_id] = (counts[p.category_id] || 0) + 1; });
-  const featured = (prods.data || []).filter(p => p.is_featured && p.stock_qty > 0).slice(0, 8);
+  const featured = (prods.data || []).filter(p => p.is_featured).slice(0, 8);
   const grid = 'repeat(auto-fill,minmax(250px,1fr))';
 
   return (
@@ -129,7 +127,7 @@ export default function Home() {
       {/* FEATURED PRODUCTS */}
       <section className="section-dark" style={{ padding: '7rem 0 6rem' }}>
         <div className="container-x">
-          <SectionHeader eyebrow={tr('Featured products')} title={tr('Popular picks, ready to ship.')}
+          <SectionHeader eyebrow={tr('Featured products')} title={tr('Popular products to explore.')}
             action={<Link to="/shop" className="btn-ghost">{tr('View all')} <Icon name="solar:arrow-right-linear" size={15} /></Link>} />
           {prods.error ? <ErrorNote error={prods.error} /> : (
             <div style={{ display: 'grid', gridTemplateColumns: grid, gap: '1.25rem' }}>
@@ -140,11 +138,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* HOW PRESCRIPTIONS WORK */}
+      {/* HOW TO USE THE CATALOG */}
       <section className="section-light" style={{ padding: '6.5rem 0' }}>
         <div className="container-x">
-          <SectionHeader dark={false} center eyebrow={tr('How it works')} title={tr('Ordering prescription medicine, step by step.')}
-            sub={tr('Over-the-counter items go straight through. For prescription-only medicines we add a pharmacist check so you get the right medicine, safely.')} />
+          <SectionHeader dark={false} center eyebrow={tr('How it works')} title={tr('A simple guide to browsing medicines.')}
+            sub={tr('Use the catalog to review product information. For medical advice or availability, contact a qualified pharmacy professional.')} />
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))', gap: '1.1rem' }}>
             {steps.map((st, i) => (
               <div key={st.title} className="card-light" style={{ padding: '1.6rem', position: 'relative' }}>
@@ -162,7 +160,7 @@ export default function Home() {
       {services.data?.length > 0 && (
         <section className="section-dark" style={{ padding: '6.5rem 0' }}>
           <div className="container-x">
-            <SectionHeader eyebrow={tr('Our services')} title={tr('More than a shop — a pharmacy that looks after you.')} />
+            <SectionHeader eyebrow={tr('Our services')} title={tr('Health information for everyday needs.')} />
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: '1.1rem' }}>
               {services.data.map(sv => (
                 <Link key={sv.id} to={sv.link || '/shop'} className="card-dark lift" style={{ padding: '1.5rem', display: 'block' }}>
@@ -182,17 +180,12 @@ export default function Home() {
         <div className="container-x two-col" style={{ display: 'grid', gridTemplateColumns: '.9fr 1.1fr', gap: '3.5rem', alignItems: 'start' }}>
           <div>
             <div className="eyebrow dark"><span className="eyebrow-dot"></span>{tr('Good to know')}</div>
-            <h2 className="h-display" style={{ color: 'var(--text-dark)' }}>{tr('Quick answers before you order.')}</h2>
-            <p style={{ margin: '1rem 0 1.6rem', color: 'var(--text-muted-dark)' }}>{tr('Payments, prescriptions, delivery and tracking — explained simply.')}</p>
+            <h2 className="h-display" style={{ color: 'var(--text-dark)' }}>{tr('Quick answers about medicines.')}</h2>
+            <p style={{ margin: '1rem 0 1.6rem', color: 'var(--text-muted-dark)' }}>{tr('Product information, prescription guidance, and pharmacist questions — explained simply.')}</p>
             <div style={{ display: 'flex', gap: '.7rem', flexWrap: 'wrap' }}>
               <Link to="/contact" className="btn-primary">{tr('All FAQs & contact')}</Link>
-              <Link to="/track" className="btn-primary" style={{ background: '#111A0C', color: '#F0F4EC', boxShadow: 'none' }}>{tr('Track an order')}</Link>
+              <Link to="/shop" className="btn-primary" style={{ background: '#111A0C', color: '#F0F4EC', boxShadow: 'none' }}>{tr('Browse the catalog')}</Link>
             </div>
-            {s.free_delivery_threshold > 0 && (
-              <div style={{ marginTop: '2rem', padding: '1rem 1.2rem', borderRadius: 18, background: 'rgba(74,140,42,.1)', border: '1px solid rgba(74,140,42,.2)', fontSize: '.9rem', color: '#2F6A17', fontWeight: 600, display: 'flex', gap: '.7rem', alignItems: 'center' }}>
-                <Icon name="solar:delivery-linear" size={22} /> {tr('Free delivery on orders over')} {kes(s.free_delivery_threshold)}
-              </div>
-            )}
           </div>
           <div style={{ display: 'grid', gap: '.8rem' }}>
             {faqs.loading && [...Array(3)].map((_, i) => <Skeleton key={i} h={70} />)}

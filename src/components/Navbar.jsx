@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
 import { useSettings } from '../context/SettingsContext';
 import { useLanguage } from '../context/LanguageContext';
 import { Icon } from './ui/Bits';
@@ -9,8 +7,6 @@ import { Icon } from './ui/Bits';
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { count } = useCart();
-  const { user, isAdmin } = useAuth();
   const { brand_name } = useSettings();
   const { language, setLanguage, tr } = useLanguage();
   const navigate = useNavigate();
@@ -25,7 +21,6 @@ export default function Navbar() {
     { to: '/shop', label: tr('Shop') },
     { to: '/about', label: tr('About') },
     { to: '/contact', label: tr('FAQ & Contact') },
-    { to: '/track', label: tr('Track Order') },
   ];
   const linkCls = ({ isActive }) => `text-sm font-bold transition-colors ${isActive ? 'text-[#111A0C]' : 'text-[#111A0C]/65 hover:text-[#111A0C]'}`;
   const iconBtn = { position: 'relative', width: 42, height: 42, border: '1px solid rgba(17,26,12,.12)', borderRadius: 999, background: 'transparent', color: '#111A0C', display: 'grid', placeItems: 'center', cursor: 'pointer' };
@@ -46,11 +41,6 @@ export default function Navbar() {
 
         <div className="flex items-center gap-2">
           <button onClick={() => navigate('/shop')} aria-label={tr('Search products')} style={iconBtn} className="hidden sm:grid"><Icon name="solar:magnifer-linear" size={19} /></button>
-          {isAdmin && <Link to="/admin" className="hidden md:inline-flex" style={{ ...iconBtn, width: 'auto', padding: '0 .9rem', gap: '.4rem', fontSize: '.78rem', fontWeight: 800, display: 'inline-flex', alignItems: 'center' }}><Icon name="solar:shield-user-linear" size={16} />Admin</Link>}
-          <Link to="/cart" aria-label={tr('Cart')} style={iconBtn}>
-            <Icon name="solar:cart-large-2-linear" size={20} />
-            {count > 0 && <span style={{ position: 'absolute', top: -4, right: -4, minWidth: 20, height: 20, padding: '0 5px', borderRadius: 999, background: '#111A0C', color: '#9FD96A', fontSize: '.68rem', fontWeight: 800, display: 'grid', placeItems: 'center' }}>{count}</span>}
-          </Link>
           <button onClick={() => setLanguage(language === 'en' ? 'sw' : 'en')} title={tr(language === 'en' ? 'Change language to Swahili' : 'Change language to English')} aria-label={tr(language === 'en' ? 'Change language to Swahili' : 'Change language to English')} style={{ ...iconBtn, width: 42, fontSize: '.72rem', fontWeight: 800 }}>{language === 'en' ? 'SW' : 'EN'}</button>
           <button className="md:hidden" onClick={() => setMenuOpen(o => !o)} aria-label={tr('Menu')} style={iconBtn}>
             <Icon name={menuOpen ? 'solar:close-linear' : 'solar:hamburger-menu-linear'} size={20} />
@@ -61,7 +51,6 @@ export default function Navbar() {
       {menuOpen && (
         <div style={{ background: 'rgba(240,244,236,.98)', borderTop: '1px solid rgba(17,26,12,.08)', padding: '1rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '.75rem' }}>
           {links.map(l => <NavLink key={l.to} to={l.to} onClick={() => setMenuOpen(false)} className={({ isActive }) => `text-sm font-bold py-1 ${isActive ? 'text-[#4A8C2A]' : 'text-[#111A0C]/75'}`}>{l.label}</NavLink>)}
-          {isAdmin && <NavLink to="/admin" onClick={() => setMenuOpen(false)} className="text-sm font-bold py-1 text-[#111A0C]/75">Admin panel</NavLink>}
         </div>
       )}
     </header>

@@ -18,7 +18,6 @@ export default function Shop() {
   const cat = params.get('cat') || 'all';
   const query = params.get('q') || '';
   const type = params.get('type') || 'all'; // all | otc | rx
-  const inStockOnly = params.get('stock') === '1';
 
   const set = (k, v) => {
     const p = new URLSearchParams(params);
@@ -31,7 +30,6 @@ export default function Shop() {
     if (cat !== 'all') l = l.filter(p => p.category_id === cat);
     if (type === 'rx') l = l.filter(p => p.requires_prescription);
     if (type === 'otc') l = l.filter(p => !p.requires_prescription);
-    if (inStockOnly) l = l.filter(p => p.stock_qty > 0);
     if (query) {
       const q = query.toLowerCase();
       l = l.filter(p => [p.name, p.generic_name, p.brand, p.description].some(v => v?.toLowerCase().includes(q)));
@@ -40,7 +38,7 @@ export default function Shop() {
     if (sort === 'price-desc') l = [...l].sort((a, b) => b.price - a.price);
     if (sort === 'name') l = [...l].sort((a, b) => a.name.localeCompare(b.name));
     return l;
-  }, [prods.data, cat, type, inStockOnly, query, sort]);
+  }, [prods.data, cat, type, query, sort]);
 
   const allCats = [{ id: 'all', name: tr('All products') }, ...(cats.data || [])];
   const activeName = tr(allCats.find(c => c.id === cat)?.name);
@@ -75,9 +73,6 @@ export default function Shop() {
             <option value="price-desc">{tr('Price: high to low')}</option>
             <option value="name">{tr('Name A–Z')}</option>
           </select>
-          <label style={{ display: 'flex', gap: '.5rem', alignItems: 'center', fontSize: '.85rem', color: 'rgba(244,250,240,.7)', cursor: 'pointer' }}>
-            <input type="checkbox" checked={inStockOnly} onChange={e => set('stock', e.target.checked ? '1' : '')} /> {tr('In stock only')}
-          </label>
         </div>
 
         {prods.error ? <ErrorNote error={prods.error} /> : prods.loading ? (

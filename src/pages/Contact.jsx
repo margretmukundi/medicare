@@ -5,7 +5,7 @@ import { useSettings } from '../context/SettingsContext';
 import { useLanguage } from '../context/LanguageContext';
 import { Icon, PageHead, Skeleton } from '../components/ui/Bits';
 
-const TOPICS = ['Ask a pharmacist', 'Order or delivery', 'Payment (M-Pesa)', 'Prescription', 'Feedback', 'Other'];
+const TOPICS = ['Product information', 'Ask a pharmacist', 'General enquiry'];
 
 export default function Contact() {
   const s = useSettings();
@@ -18,14 +18,14 @@ export default function Contact() {
 
   async function submit(e) {
     e.preventDefault();
-    if (!form.email.trim() && !form.phone.trim()) { setState(x => ({ ...x, error: 'Please give an email or phone number so we can reply.' })); return; }
+    if (!s.email) { setState(x => ({ ...x, error: 'Contact email has not been configured yet.' })); return; }
     setState({ sending: true, sent: false, error: '' });
     try {
       await submitContact({ ...form, email: form.email.trim() || null, phone: form.phone.trim() || null });
       setState({ sending: false, sent: true, error: '' });
       setForm({ name: '', email: '', phone: '', topic: TOPICS[0], message: '' });
-    } catch {
-      setState({ sending: false, sent: false, error: 'Could not send your message. Please try again.' });
+    } catch (err) {
+      setState({ sending: false, sent: false, error: err.message || 'Could not open your email app.' });
     }
   }
 
@@ -36,7 +36,7 @@ export default function Contact() {
 
   return (
     <div style={{ background: 'var(--bg-ink)' }}>
-      <PageHead eyebrow={tr('FAQ & Contact')} title={tr("Questions? We're here to help.")} sub={tr('Find quick answers below, or send our pharmacy team a message.')} />
+      <PageHead eyebrow={tr('FAQ & Contact')} title={tr("Questions? We're here to help.")} sub={tr('Browse common questions or use the pharmacy contact details shown below.')} />
 
       <section className="section-light" style={{ padding: '4.5rem 0' }}>
         <div className="container-x">
@@ -62,7 +62,7 @@ export default function Contact() {
           <div>
             <div className="eyebrow"><span className="eyebrow-dot"></span>{tr('Get in touch')}</div>
             <h2 className="h-display">{tr('Ask our pharmacy team.')}</h2>
-            <p style={{ margin: '1rem 0 1.8rem', color: 'rgba(244,250,240,.66)', maxWidth: 480 }}>{tr("Questions about a product, an order or a payment? Send us a message and we'll reply by email or phone.")}</p>
+            <p style={{ margin: '1rem 0 1.8rem', color: 'rgba(244,250,240,.66)', maxWidth: 480 }}>{tr('Questions about product information or medicine use? Contact details are listed here when provided by the pharmacy.')}</p>
             {details.length > 0 && <div style={{ display: 'grid', gap: '.9rem', marginBottom: '1.8rem' }}>
               {details.map(([icon, text]) => <div key={text} style={{ display: 'flex', gap: '.8rem', alignItems: 'center', color: 'rgba(244,250,240,.8)' }}><Icon name={icon} size={20} style={{ color: '#6DB33F' }} />{text}</div>)}
             </div>}
@@ -72,11 +72,16 @@ export default function Contact() {
           </div>
 
           <div className="card-dark" style={{ padding: '1.8rem', borderRadius: 26 }}>
-            {state.sent ? (
+            {!s.email ? (
+              <div>
+                <h3 style={{ margin: '0 0 .5rem' }}>{tr('Contact details are not available yet')}</h3>
+                <p style={{ margin: 0, color: 'rgba(244,250,240,.65)' }}>{tr('The pharmacy has not added a contact email. Please check back later.')}</p>
+              </div>
+            ) : state.sent ? (
               <div style={{ textAlign: 'center', padding: '2.5rem 0' }}>
                 <Icon name="solar:check-circle-bold" size={52} style={{ color: '#6DB33F' }} />
-                <h3 style={{ margin: '1rem 0 .4rem', fontSize: '1.3rem' }}>{tr('Message sent')}</h3>
-                <p style={{ margin: 0, color: 'rgba(244,250,240,.6)', fontSize: '.9rem' }}>{tr('Thanks — our team will get back to you.')}</p>
+                <h3 style={{ margin: '1rem 0 .4rem', fontSize: '1.3rem' }}>{tr('Email draft opened')}</h3>
+                <p style={{ margin: 0, color: 'rgba(244,250,240,.6)', fontSize: '.9rem' }}>{tr('Review and send the message from your email app.')}</p>
                 <button onClick={() => setState({ sending: false, sent: false, error: '' })} style={{ marginTop: '1.2rem', background: 'none', border: 0, color: '#9FD96A', fontWeight: 700, cursor: 'pointer' }}>{tr('Send another message')}</button>
               </div>
             ) : (
